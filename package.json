@@ -1,0 +1,53 @@
+{
+  "name": "ecommerce-node",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Plain Node.js (Express) implementation of the shop API: the same HTTP API and databases as eCommerce-api (NestJS).",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "db:generate": "prisma generate --config prisma.config.ts",
+    "dev": "tsx watch src/main.ts",
+    "start": "node dist/main.js",
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "verify": "pnpm typecheck && pnpm test && pnpm build"
+  },
+  "dependencies": {
+    "@ecom/contracts": "github:shubhamrathi020/eCommerce-contracts#v0.1.0",
+    "@prisma/adapter-pg": "^7.10.0",
+    "@prisma/client": "^7.10.0",
+    "@prisma/client-runtime-utils": "7.10.0",
+    "@prometheus-io/client": "^0.16.1",
+    "amqplib": "^2.2.0",
+    "argon2": "^0.45.1",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "express": "^4.21.2",
+    "helmet": "^8.3.0",
+    "ioredis": "^6.0.0",
+    "jsonwebtoken": "^9.0.3",
+    "meilisearch": "^0.62.0",
+    "mongodb": "^7.6.0",
+    "pg": "^8.23.0",
+    "razorpay": "^2.9.8"
+  },
+  "devDependencies": {
+    "@types/amqplib": "^0.10.8",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/node": "^24.0.0",
+    "@types/pg": "^8.23.1",
+    "dotenv": "^18.0.4",
+    "prisma": "7.10.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3",
+    "vitest": "~4.1.0"
+  },
+  "packageManager": "pnpm@9.15.9"
+}
