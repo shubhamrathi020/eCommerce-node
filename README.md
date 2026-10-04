@@ -68,4 +68,5 @@ the services · `prisma/schema.prisma` a verbatim copy of the Nest schema, used 
 - The schema is not migrated from here. Run the Nest API's migrations (`pnpm db:migrate:deploy`, or its `api-migrate` compose
   service) first, and copy `prisma/schema.prisma` over when it changes.
 - Log lines are JSON objects with `time`, `level`, `logger` and `message`, not Nest's text format.
-- A path parameter with a broken percent-encoding gets the error body without a `requestId`'s absence in Nest (it has one here).
+- A request whose path has a broken percent-encoding gets the same 400 as in Nest, but with a `requestId` in the body (Nest's
+  answer omits it).
