@@ -8,6 +8,7 @@ import { type Services, buildServices } from './container';
 import { errorHandler } from './http/error-handler';
 import { HttpError } from './http/errors';
 import { requestContext } from './http/request-context';
+import { registerDocs } from './http/docs';
 import { Routes } from './http/route';
 import { Logger } from './logger';
 import { accountRoutes } from './routes/accounts';
@@ -39,14 +40,19 @@ export function createApp(config: ApiConfig): RunningApp {
   // Behind Docker or an ingress: trust one proxy hop for the client IP (rate limiting uses it).
   app.set('trust proxy', 1);
 
-  // A JSON API needs no content security policy beyond "nothing".
-  app.use(helmet({ contentSecurityPolicy: { directives: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] } } }));
+  // A JSON API needs no content security policy beyond "nothing"; the documentation page gets its own, looser one.
+  const apiHeaders = helmet({ contentSecurityPolicy: { directives: { defaultSrc: ["'none'"], frameAncestors: ["'none'"] } } });
+  const docsHeaders = helmet({ contentSecurityPolicy: { directives: { defaultSrc: ["'self'"], scriptSrc: ["'self'", "'unsafe-inline'"], styleSrc: ["'self'", "'unsafe-inline'"], imgSrc: ["'self'", 'data:'] } } });
+  app.use((req: Request, res: Response, next: NextFunction) => (req.path.startsWith('/docs') ? docsHeaders : apiHeaders)(req, res, next));
   app.use(cookieParser());
   // Credentials only for the listed origins. Anything else gets no CORS headers at all.
   app.use(cors({ origin: config.corsOrigins, credentials: true, allowedHeaders: ['content-type', 'authorization', 'x-csrf', 'x-request-id'], exposedHeaders: ['x-request-id'], maxAge: 600 }));
   // `verify` stashes the exact raw bytes on the request: the Razorpay webhook checks its signature against the untouched
   // body, not a re-serialised copy of the parsed JSON.
   app.use(express.json({ limit: '100kb', verify: (req, _res, buf) => ((req as Request & { rawBody?: string }).rawBody = buf.toString('utf8')) }));
+
+  // Like Nest, the documentation routes sit before the request-id and metrics middleware (and are never rate limited).
+  if (config.docs) registerDocs(app);
 
   app.use(requestContext);
   app.use((req: Request, res: Response, next: NextFunction) => {

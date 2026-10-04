@@ -24,6 +24,7 @@ COPY --chown=node:node package.json pnpm-lock.yaml ./
 RUN NODE_ENV=development pnpm install --frozen-lockfile && pnpm prune --prod && rm -rf /root/.cache /root/.local/share/pnpm
 COPY --from=build --chown=node:node /app/dist ./dist
 COPY --from=build --chown=node:node /app/generated ./generated
+COPY --chown=node:node docs ./docs
 USER node
 EXPOSE 3333
 HEALTHCHECK --interval=15s --timeout=3s --start-period=10s --retries=3 CMD ["node", "dist/main.js", "-healthcheck"]

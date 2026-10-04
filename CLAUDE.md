@@ -13,7 +13,7 @@ PostgreSQL schema and the integration specs. Solo project; the user pushes (neve
 ## Rules of this repository
 - Behaviour parity beats cleverness. When Nest does something odd (statuses, messages, cookie paths, header names), copy it.
 - Never recompute a rule that `@ecom/contracts` already has.
-- `prisma/schema.prisma` is a copy; change it in `eCommerce-api` first. This repository never migrates.
+- `prisma/schema.prisma` and `docs/*` (the OpenAPI document and Swagger UI page) are copies; change them in `eCommerce-api` first (`test/export-openapi.spec.ts` regenerates `docs/`). This repository never migrates.
 - A new route needs the same guard order as Nest: blanket rate limit, bucket limit, authentication, CSRF, body validation, handler.
 - Commit after each finished unit. Never push. Files containing apostrophes in shell heredocs break the tool; use the editor tools.
 
