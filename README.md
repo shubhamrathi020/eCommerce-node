@@ -12,7 +12,7 @@ Meilisearch, Redis, RabbitMQ), so a frontend can talk to any of the backends and
 ## How it is kept identical
 
 1. **The Nest test suite runs against this server.** `eCommerce-api` has a test harness mode: with `API_BIN` and `API_ARGS`
-   pointing at the server built here, its 65 integration specs start it as a child process and run unchanged over HTTP (auth,
+   pointing at the server built here, its 68 integration specs start it as a child process and run unchanged over HTTP (auth,
    accounts, catalog, admin catalog, cart, checkout, orders, payments, messaging, metrics, contract shapes). The one spec that
    calls a Nest internals directly (the abandoned-cart job) is covered by `src/messaging/scheduler.spec.ts` here.
 2. **The business rules are the shared package.** Pricing, coupons, serviceability, order transitions and permissions come from
